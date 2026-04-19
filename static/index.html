@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>住院号：</title>
+    <style>
+        :root {
+            --chemotherapy: #e8f5e9;
+            --targeted: #fff3e0;
+            --immunotherapy: #e3f2fd;
+            --endocrine: #fce4ec;
+            --other: #f5f5f5;
+            --false-bg: #f5f5f5;
+            --false-color: #757575;
+            --external-tag: #ffebee;
+            --external-color: #c62828;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .card {
+            position: relative;
+            width: 900px;
+            margin: 20px auto;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            font-family: '微软雅黑', sans-serif;
+            background: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+        .card::after {
+            content: "宁波大学附属第一医院";
+            position: absolute;
+            top: 30%;
+            left: -50px;
+            right: -50px;
+            color: rgba(200, 200, 200, 0.15);
+            font-size: 48px;
+            font-weight: bold;
+            transform: rotate(-30deg);
+            pointer-events: none;
+            z-index: 1;
+            text-align: center;
+        }
+        .card-content {
+            flex: 1;
+        }
+        .patient-info {
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .treatment-status {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .status-item {
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-item.true {
+            color: #2e7d32;
+        }
+        .status-item.false {
+            background: var(--false-bg);
+            color: var(--false-color);
+        }
+        .status-item.true[data-treatment-type="chemotherapy"] { background: var(--chemotherapy); }
+        .status-item.true[data-treatment-type="targeted"] { background: var(--targeted); }
+        .status-item.true[data-treatment-type="immunotherapy"] { background: var(--immunotherapy); }
+        .status-item.true[data-treatment-type="endocrine"] { background: var(--endocrine); }
+        .treatment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .treatment-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #eee;
+        }
+        .treatment-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .drug-type {
+            font-size: 0.9em;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .external-tag {
+            background: var(--external-tag);
+            color: var(--external-color);
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+        }
+        [data-drug-type="化疗药"] { background: var(--chemotherapy); }
+        [data-drug-type="靶向药"] { background: var(--targeted); }
+        [data-drug-type="免疫药"] { background: var(--immunotherapy); }
+        [data-drug-type="内分泌药"] { background: var(--endocrine); }
+        [data-drug-type="其他类"] { background: var(--other); }
+        .card-footer {
+            margin-top: auto;
+            padding: 15px 0 0;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .wp-tag {
+            background: #ef4444;  /* 高饱和度红色 */
+            color: white !important;  /* 强制白色文字 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-size: 0.9em;
+            font-weight: 600;  /* 加粗字体 */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 增加立体感 */
+        }
+
+        .zf-tag {
+            background: #4f46e5;  /* 高饱和度蓝紫色 */
+            color: white !important;  /* 强制白色文字 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-size: 0.9em;
+            font-weight: 600;  /* 加粗字体 */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 增加立体感 */
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-content">
+            <div class="patient-info">
+                <h1>住院号：<span id="hospitalNo">-</span></h1>
+                <h2>患者姓名：<span id="patientName">-</span></h2>
+            </div>
+            <div class="treatment-status" id="treatmentStatus"></div>
+            <h3>肿瘤药物明细：</h3>
+            <table class="treatment-table">
+                <thead>
+                    <tr>
+                        <th>药物类型</th>
+                        <th>药物名称</th>
+                        <th>规格</th>
+                        <th>数量</th>
+                        <th>结算金额</th>
+                        <th>服用方式</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="orderList"></tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            肿瘤治疗信息卡片 &nbsp;&nbsp; 联系电话：616963（付）
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时自动获取URL中的住院号
+        window.onload = function() {
+            // 从URL路径中提取住院号（假设URL结构为 http://domain.com/住院号）
+            const pathParts = window.location.pathname.split('/');
+            const hospitalNo = pathParts[pathParts.length - 1];
+            
+            // 更新页面标题
+            document.title = `住院号：${hospitalNo}`;
+};
+
+        async function loadData() {
+            const pathSegments = window.location.pathname.split('/');
+            const hospitalNo = pathSegments[pathSegments.length - 1];
+            try {
+                const response = await fetch(`/api/treatment/${hospitalNo}`);
+                if (!response.ok) throw new Error('数据加载失败');
+                const data = await response.json();
+
+                // 填充基本信息
+                document.getElementById('hospitalNo').textContent = data.hospitalNo;
+                document.getElementById('patientName').textContent = data.patientName;
+                document.title = ` ${data.patientName}:${data.hospitalNo}`;
+
+                // 生成治疗状态卡片
+                const treatments = [
+                    { key: 'chemotherapy', label: '化学治疗', type: 'chemotherapy' },
+                    { key: 'targeted', label: '分子靶向', type: 'targeted' },
+                    { key: 'immunotherapy', label: '免疫治疗', type: 'immunotherapy' },
+                    { key: 'endocrine', label: '内分泌治疗', type: 'endocrine' }
+                ];
+                
+                const statusHtml = treatments.map(t => `
+                    <div class="status-item ${data.treatments[t.key] ? 'true' : 'false'}" 
+                         data-treatment-type="${data.treatments[t.key] ? t.type : ''}">
+                        <span class="status-icon">${data.treatments[t.key] ? '✓' : '✗'}</span>
+                        <div>
+                            <div class="status-title">${t.label}</div>
+                            <div class="status-value">${data.treatments[t.key] ? '有' : '无'}</div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('treatmentStatus').innerHTML = statusHtml;
+
+                // 生成医嘱列表
+                let ordersHtml = '';
+                data.orders.forEach(order => {
+                    ordersHtml += `
+                        <tr data-drug-type="${order.DRUGTYPE}">
+                            <td><span class="drug-type">${order.DRUGTYPE}</span></td>
+                            <td>
+                                ${order.YIZHUMC}
+                                ${order.ISWP === '外配' ? 
+                                    '<span class="wp-tag">外配</span>' : 
+                                    (order.ISWP === '自费' ? 
+                                    '<span class="zf-tag">自费</span>' : 
+                                    '')}
+                            </td>
+                            <td>${order.YIZHUMS}</td>
+                            <td>${order.SHULIANG || "-"}</td>
+                            <td>¥${order.JIESUANJE ? order.JIESUANJE.toFixed(2) : ""}</td>
+                            <td>${order.FYFS}</td>
+                            <td>${order.FASHENGRQ ? new Date(order.FASHENGRQ).toLocaleDateString() : "无记录"}</td>
+                        </tr>
+                    `;
+                });
+                document.getElementById('orderList').innerHTML = ordersHtml;
+            } catch (error) {
+                alert('数据加载失败，请检查住院号是否正确');
+                console.error('错误详情:', error);
+            }
+        }
+        window.onload = loadData;
+    </script>
+</body>
+</html>
