@@ -395,6 +395,13 @@ async function searchTreatment(hospitalNo) {
 
 ## 使用示例
 
+### 系统界面预览
+
+#### 主页面界面
+![系统主页面样例1](https://jeffery-bucket.oss-cn-hangzhou.aliyuncs.com/img/web_for_tumor_sample_cut1.jpg)
+
+![系统主页面样例2](https://jeffery-bucket.oss-cn-hangzhou.aliyuncs.com/img/web_for_tumor_sample_cut2.jpg)
+
 ### 场景1：查询患者治疗情况
 
 **步骤：**
@@ -684,7 +691,7 @@ END AS DRUGTYPE
 **修改位置2**：[static/index.html](static/index.html#L33) - 医院水印名称
 ```css
 .card::after {
-    content: "宁波大学附属第一医院";  /* 修改为你的医院名称 */
+    content: "**医院";  /* 修改为你的医院名称 */
     ...
 }
 ```
