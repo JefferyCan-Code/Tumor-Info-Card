@@ -684,7 +684,7 @@ END AS DRUGTYPE
 **修改位置2**：[static/index.html](static/index.html#L33) - 医院水印名称
 ```css
 .card::after {
-    content: "宁波大学附属第一医院";  /* 修改为你的医院名称 */
+    content: "***医院";  /* 修改为你的医院名称 */
     ...
 }
 ```
