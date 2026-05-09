@@ -1,0 +1,9 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Fu
+- given-names: Jianfei
+orcid: https://orcid.org/0009-0003-6247-0817
+title:JefferyCan-Code/Tumor-Info-Card: Tumor Cost Cards v1.0
+version: v1.0
+date-released: 2026-05-09
